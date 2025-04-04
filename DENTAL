@@ -1,0 +1,68 @@
+class Patient:
+    def __init__(self, patient_id, name, contact_info, medical_history):
+        self.patient_id = patient_id
+        self.name = name
+        self.contact_info = contact_info
+        self.medical_history = medical_history
+class Appointment:
+    def __init__(self, appointment_id, patient_id, date, time, treatment):
+        self.appointment_id = appointment_id
+        self.patient_id = patient_id
+        self.date = date
+        self.time = time
+        self.treatment = treatment
+
+class Clinic:
+    def __init__(self):
+        self.patients = {}  # Dictionary to store patients (patient_id: Patient object)
+        self.appointments = []  # List to store appointments
+
+    def add_patient(self, patient):
+        self.patients[patient.patient_id] = patient
+
+    def search_patient(self, patient_id):
+        return self.patients.get(patient_id)
+
+    def update_patient(self, patient_id, new_info):
+        if patient_id in self.patients:
+            self.patients[patient_id].**new_info = new_info
+
+    def book_appointment(self, appointment):
+        self.appointments.append(appointment)
+
+    def view_appointments(self, patient_id=None, date=None):
+        if patient_id:
+            return [appt for appt in self.appointments if appt.patient_id == patient_id]
+        elif date:
+            return [appt for appt in self.appointments if appt.date == date]
+        else:
+            return self.appointments
+
+    def cancel_appointment(self, appointment_id):
+        for appt in self.appointments:
+            if appt.appointment_id == appointment_id:
+                self.appointments.remove(appt)
+                return
+        print("Appointment not found")
+
+clinic = Clinic()
+
+patient1 = Patient("1", "John Doe", "john.doe@example.com", "No known allergies")
+clinic.add_patient(patient1)
+
+patient2 = Patient("2", "Jane Smith", "jane.smith@example.com", "Allergic to penicillin")
+clinic.add_patient(patient2)
+
+appointment1 = Appointment("1", "1", "2025-04-05", "10:00", "Checkup")
+clinic.book_appointment(appointment1)
+
+appointment2 = Appointment("2", "2", "2025-04-06", "14:00", "Filling")
+clinic.book_appointment(appointment2)
+
+print("Appointments for John Doe:")
+for appt in clinic.view_appointments(patient_id="1"):
+    print(appt.date, appt.time, appt.treatment)
+
+print("\nAppointments for 2025-04-05:")
+for appt in clinic.view_appointments(date="2025-04-05"):
+    print(appt.date, appt.time, appt.treatment)
